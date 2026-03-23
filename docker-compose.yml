@@ -1,0 +1,75 @@
+# ──────────────────────────────────────
+# ISE ACME Certificate Auto-Renewal
+# Docker Compose Configuration
+# ──────────────────────────────────────
+
+version: "3.8"
+
+services:
+  # ─────────────────────────────
+  # One-time or manual execution
+  # ─────────────────────────────
+  ise-acme:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ise-acme-automation:latest
+    container_name: ise-acme-renewal
+    restart: "no"
+    volumes:
+      - ./config.json:/app/config/config.json:ro
+      - ./logs:/app/logs
+    environment:
+      - TZ=Europe/Amsterdam
+    # Override credentials via environment variables (recommended over config file)
+    # env_file:
+    #   - .env
+    command: ["--action", "renew", "--config", "/app/config/config.json"]
+    networks:
+      - ise-acme-net
+
+  # ─────────────────────────────
+  # Check-only mode (read-only)
+  # ─────────────────────────────
+  ise-acme-check:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ise-acme-automation:latest
+    container_name: ise-acme-check
+    restart: "no"
+    profiles:
+      - check
+    volumes:
+      - ./config.json:/app/config/config.json:ro
+      - ./logs:/app/logs
+    environment:
+      - TZ=Europe/Amsterdam
+    command: ["--action", "check", "--config", "/app/config/config.json"]
+    networks:
+      - ise-acme-net
+
+  # ─────────────────────────────
+  # Force renewal mode
+  # ─────────────────────────────
+  ise-acme-force:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ise-acme-automation:latest
+    container_name: ise-acme-force-renew
+    restart: "no"
+    profiles:
+      - force
+    volumes:
+      - ./config.json:/app/config/config.json:ro
+      - ./logs:/app/logs
+    environment:
+      - TZ=Europe/Amsterdam
+    command: ["--action", "force-renew", "--config", "/app/config/config.json"]
+    networks:
+      - ise-acme-net
+
+networks:
+  ise-acme-net:
+    driver: bridge
