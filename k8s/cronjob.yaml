@@ -1,1 +1,66 @@
-
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ise-acme-renewal
+  namespace: network-automation
+  labels:
+    app: ise-acme
+    component: certificate-renewal
+spec:
+  schedule: "0 2 * * *"
+  timeZone: "Europe/Amsterdam"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 600
+  jobTemplate:
+    metadata:
+      labels:
+        app: ise-acme
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 1800
+      template:
+        metadata:
+          labels:
+            app: ise-acme
+          annotations:
+            prometheus.io/scrape: "false"
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: default
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 1000
+          containers:
+            - name: ise-acme
+              image: ise-acme-automation:latest
+              imagePullPolicy: Always
+              args:
+                - "--action"
+                - "renew"
+                - "--config"
+                - "/app/config/config.json"
+              envFrom:
+                - secretRef:
+                    name: ise-acme-credentials
+              volumeMounts:
+                - name: config
+                  mountPath: /app/config
+                  readOnly: true
+                - name: logs
+                  mountPath: /app/logs
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "100m"
+                limits:
+                  memory: "256Mi"
+                  cpu: "500m"
+          volumes:
+            - name: config
+              configMap:
+                name: ise-acme-config
+            - name: logs
+              emptyDir: {}
