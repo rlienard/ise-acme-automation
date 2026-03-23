@@ -1,0 +1,37 @@
+{
+    "ise_host": "ise-pan.yourdomain.com",
+    "ise_username": "admin",
+    "ise_password": "securepassword",
+    "ise_ers_port": 9060,
+    "ise_open_api_port": 443,
+    "acme_directory_url": "https://acme.digicert.com/v2/acme/directory/",
+    "acme_kid": "your_digicert_key_id",
+    "acme_hmac_key": "your_digicert_hmac_key",
+    "common_name": "guest.yourdomain.com",
+    "san_names": ["guest.yourdomain.com", "portal.yourdomain.com"],
+    "key_type": "RSA_2048",
+    "portal_group_tag": "Default Portal Certificate Group",
+    "certificate_mode": "shared",
+    "primary_node": "ise-psn01.yourdomain.com",
+    "ise_nodes": [
+        {
+            "name": "ise-psn01.yourdomain.com",
+            "role": "PSN",
+            "enabled": true
+        },
+        {
+            "name": "ise-psn02.yourdomain.com",
+            "role": "PSN",
+            "enabled": true
+        }
+    ],
+    "renewal_threshold_days": 30,
+    "dns_provider": "cloudflare",
+    "cloudflare_api_token": "your_token",
+    "cloudflare_zone_id": "your_zone_id",
+    "smtp_server": "smtp.yourdomain.com",
+    "smtp_port": 587,
+    "smtp_username": "alerts@yourdomain.com",
+    "smtp_password": "smtp_password",
+    "alert_recipients": ["netadmin@yourdomain.com", "secops@yourdomain.com"]
+}
