@@ -47,7 +47,7 @@ Thank you for your interest in contributing! 🎉
    We follow Conventional Commits:
 
    |Prefix      |   Usage                     |
-   |------------|-----------------------------|      
+   |:-----------|:----------------------------|      
    |feat:       |	  New feature               |
    |fix:	       |   Bug fix                   |
    |docs:	    |   Documentation changes     |
