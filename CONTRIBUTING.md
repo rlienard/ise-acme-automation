@@ -8,6 +8,7 @@ Thank you for your interest in contributing! 🎉
 
 1. Check existing [Issues](https://github.com/rlienard/ise-acme-automation/issues) first
 2. Create a new issue with:
+   
    - Clear title and description
    - Steps to reproduce
    - Expected vs. actual behavior
